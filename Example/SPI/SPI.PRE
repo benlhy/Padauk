@@ -1,0 +1,12 @@
+
+.CHIP	PFS173
+
+//	----------- IMPORTANT -------------
+//	Please don't change the follow code
+//	It only be used for internal Mini-C
+//	-----------------------------------
+
+	.JMP	FPPA0	<?>, 0
+.ROMADR	0x10
+	.PUT	Interrupt <reti>, 8
+
