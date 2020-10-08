@@ -1,0 +1,8 @@
+[INI]
+PROJECT=PRE_FILE
+[LINKS]
+~Timers.C
+[HEAD]
+~extern.h
+[DEPEND]
+~Timers.PRE

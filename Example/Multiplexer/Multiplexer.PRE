@@ -1,0 +1,25 @@
+
+.CHIP	PFS173
+//{{PADAUK_CODE_OPTION
+	.Code_Option	Comparator_Edge	Rising_Edge
+	.Code_Option	LVR		2.5V
+	.Code_Option	TMx_Bit		6BIT
+	.Code_Option	TMx_Source	16MHz
+	.Code_Option	PWM_Source	16MHz
+	.Code_Option	GPC_PWM		Disable
+	.Code_Option	Interrupt_Src1	PB.0
+	.Code_Option	Interrupt_Src0	PA.0
+	.Code_Option	Bootup_Time	Fast
+	.Code_Option	PB4_PB5_Drive	Normal
+	.Code_Option	Security	Disable		// Security Disable
+//}}PADAUK_CODE_OPTION
+
+//	----------- IMPORTANT -------------
+//	Please don't change the follow code
+//	It only be used for internal Mini-C
+//	-----------------------------------
+
+	.JMP	FPPA0	<?>, 0
+.ROMADR	0x10
+	.PUT	Interrupt <reti>, 8
+
