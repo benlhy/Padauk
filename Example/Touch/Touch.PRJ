@@ -1,12 +1,12 @@
 [INI]
 PROJECT=PRE_FILE
 [LINKS]
-~Timers.C
+~Touch.C
 [HEAD]
 ~extern.h
 [DEPEND]
 ~$:INC_PDK\PFS173.INC
-~Timers.PRE
+~Touch.PRE
 [Ram_Break]
 Break1=No 0000
 Break2=No 0000
@@ -25,5 +25,5 @@ Break8=Au 0000 00FF
 Mark=51 1
 ICE=0 6 2 1388
 [PRE]
-~Timers.PRJ
-~Timers.PRE
+~Touch.PRJ
+~Touch.PRE
