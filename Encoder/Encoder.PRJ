@@ -1,0 +1,11 @@
+[INI]
+PROJECT=~Encoder.PRJ
+[LINKS]
+~Encoder.C
+[HEAD]
+~extern.h
+[DEPEND]
+~Encoder.PRE
+[PRE]
+~Encoder.PRJ
+~Encoder.PRE
