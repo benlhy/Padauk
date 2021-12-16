@@ -95,12 +95,14 @@ void	FPPA0 (void)
 	PADIER = 0b_0100_0001;  // Port A Digital Input Enable Register, 1/0:
                        	    // enable/disable, Bit 2:1 is reserved
 
-	PAPH = 0b_0100_0000;	// Port A pull high register
+	PAPH = 0b_0100_0001;	// Port A pull high register
 
-	// Port B setuop
+	// Port B setup
 
 	PBDIER = 0b_0000_0001;  // Port B Digital Input Enable Register, 1/0:
 							// enable/disable
+
+	PBPH = 0b_0000_0001;	// Port B pull high register
 
 
 
