@@ -1,0 +1,11 @@
+[INI]
+PROJECT=PRE_FILE
+[LINKS]
+~MotorController.C
+[HEAD]
+~extern.h
+[DEPEND]
+~MotorController.PRE
+[PRE]
+~MotorController.PRJ
+~MotorController.PRE
