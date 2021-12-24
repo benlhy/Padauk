@@ -40,6 +40,10 @@ Todo
 
 */
 
+// Debug
+//#define DEBUG
+
+
 // PIN defines
 SPI_Out			BIT	PB.2;
 SPI_OutMode		BIT	PBC.2;
@@ -49,8 +53,7 @@ SPI_Clk			BIT	PB.4;
 SPI_ClkMode		BIT	PBC.4;
 
 
-// Debug
-#define DEBUG
+
 LED				BIT PB.7;
 LED_OutMode		BIT PBC.7;
 
@@ -79,11 +82,12 @@ WORD    counts;			      	// stores the encoder counts
 BYTE  	trig;            	    // flag to keep track of the trigger
 BYTE	PWM_val;				// PWM value
 BYTE	curr_PWM_val;
-WORD	desiredPos;				// Desired position
+static WORD		desiredPos;				// Desired position
 WORD 	center;
 
 
 void goDesiredPos(void); // function prototype
+void	SPI_HandShake (void); // function prototype
 
 void	FPPA0 (void)
 {
@@ -110,7 +114,7 @@ void	FPPA0 (void)
 
 	// Port B setup
 
-	PBDIER = 0b_0000_0001;  // Port B Digital Input Enable Register, 1/0:
+	PBDIER = 0b_0001_1111;  // Port B Digital Input Enable Register, 1/0:
 							// enable/disable
 
 	PBPH = 0b_0000_0001;	// Port B pull high register
@@ -134,47 +138,53 @@ void	FPPA0 (void)
 	// Set Pinmode
 
 	set1 LED_OutMode; 		// Set LED to output based on the PAC reg
-	set1 INTB_OutMode;
-	set1 COUNT_OutMode;
 	set1 DIR_OutMode;
 	set1 PWM_OutMode;
 	set0 BTN_OutMode;		// Set BTN to input 
+		set0	SPI_ClkMode;	// input
+	set0	SPI_InMode;		// input	
+	set1	SPI_OutMode;	// output
+
 
 	while (1)
 	{
+		
 		#ifdef DEBUG
-		// initialize values
+			// initialize values
 			desiredPos = 0xFFFF-2000 + 1 ;	// -ve value relative from current position
 			counts = center;		// reset count
-		#endif
-		goDesiredPos();
+			goDesiredPos();
+			
+			TM2C = 0b_0001_00_1_0; // disable
+			.wait0 BTN;
+			.wait1 BTN;
+			TM2C = 0b_0001_10_1_0;	// enable
 
 
-		TM2C = 0b_0001_00_1_0; // disable
-
-
-
-		.wait0 BTN;
-		.wait1 BTN;
-
-		TM2C = 0b_0001_10_1_0;	// enable
-
-		#ifdef DEBUG
-		// initialize values
-			desiredPos = 2000;	// relative from current position
+			// initialize values
+			desiredPos = 200;	// relative from current position
 			counts = center;		// reset count
+			goDesiredPos();
+
+			TM2C = 0b_0001_00_1_0; // disable
+			.wait0 BTN;
+			.wait1 BTN;
+			TM2C = 0b_0001_10_1_0;	// enable
 		#endif
+
+		
+		
+
+
+		SPI_Handshake();
+		TM2C = 0b_0001_10_1_0;	// enable
+		counts = center;
 		goDesiredPos();
-
-
 		TM2C = 0b_0001_00_1_0; // disable
 
+		
 
-
-		.wait0 BTN;
-		.wait1 BTN;
-
-		TM2C = 0b_0001_10_1_0;	// enable
+		
 
 
 	
@@ -307,12 +317,8 @@ static	void	SPI_Receive (void)
 
 void	SPI_HandShake (void)
 {
-	set0	SPI_ClkMode;
-	set0	SPI_InMode;
-	set1	SPI_OutMode;
 
-	while (1)
-	{
+	
 		SPI_Receive(); 
 		// check SDI_Data_In, if 1 (01) = reset, if 3 (10) = read back
 		if (SPI_Data_In == 0x01) {
@@ -324,8 +330,21 @@ void	SPI_HandShake (void)
 			A	=	counts & 0xFF; 	// set A to the last low bits
 			SPI_Send(); 			// send out the next 8 bits
 		}
+		if (SPI_Data_In == 0x05) {
+			WORD newPos;
+			SPI_Receive(); 			// data is stored in...?
+			//desiredPos = SPI_Data_In;
+			newPos = SPI_Data_In << 8; // first 8 bits 
+			SPI_Receive();
+			newPos = newPos | SPI_Data_In; // next 8 bits
+			desiredPos = newPos;
+		}
 		// ignore all other commands 
+		else {
+			desiredPos = SPI_Data_In;
+		}
 
-	}
+	
 }
+
 
