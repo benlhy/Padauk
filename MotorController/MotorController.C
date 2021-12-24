@@ -5,6 +5,7 @@
 #include	"extern.h"
 
 // v1: 7 Dec 2021
+// v2: 21 Dec 2021 - updated for motor controller
 
 
 // Chip used: PFS173
@@ -173,19 +174,11 @@ void	FPPA0 (void)
 		#endif
 
 		
-		
-
-
 		SPI_Handshake();
 		TM2C = 0b_0001_10_1_0;	// enable
 		counts = center;
 		goDesiredPos();
 		TM2C = 0b_0001_00_1_0; // disable
-
-		
-
-		
-
 
 	
 	}
@@ -228,25 +221,36 @@ void	Interrupt (void)
 void		goDesiredPos(void) {
 		WORD diff;					// Stores the error value
 		WORD pos;
+		WORD prevDiff;
 
 
 		// desired outcome 87CF
 		// - 2000 applied, F830
 
 		pos = center - desiredPos; 
+		prevDiff = 0;
 
 		do {
+
+			// okay because there are no negative numbers so this is hack
+			// Use just P in the PID 
 			
 			if (counts > pos ) {
-				diff = counts - pos;
+				
+				diff = counts - pos + prevDiff; // calculate error = current position - desired position
+				prevDiff = prevDiff + counts - pos; // increment error (diff is always positive...)
+				 
+				
 				set1 DIR;
 			} else if (counts < pos) {
-				diff = pos - counts;
+				diff = pos - counts + prevDiff;
+				prevDiff = prevDiff + counts - pos; // increment error (diff is always positive...)
 				set0 DIR;
 			}
 			
-			diff = counts - pos;
-			diff = diff >> 3;
+			
+			prevDiff = prevDiff >> 2; // devide by 
+			diff = diff >> 3; // divide by 8 
 			
 
 			// limit the error
@@ -340,9 +344,7 @@ void	SPI_HandShake (void)
 			desiredPos = newPos;
 		}
 		// ignore all other commands 
-		else {
-			desiredPos = SPI_Data_In;
-		}
+		
 
 	
 }
