@@ -1,0 +1,11 @@
+[INI]
+PROJECT=PRE_FILE
+[LINKS]
+~Touchpad.C
+[HEAD]
+~extern.h
+[DEPEND]
+~Touchpad.PRE
+[PRE]
+~Touchpad.PRJ
+~Touchpad.PRE

@@ -13,17 +13,17 @@ Break6=Au 0000 00FF
 Break7=Au 0000 00FF
 Break8=Au 0000 00FF
 [Ctrl_Break]
-Mark=51 1
+Mark=41 1
 ICE=0 6 2 1388
 [INI]
 PROJECT=PRE_FILE
 [LINKS]
-~MotorController.C
+~Touchpad.C
 [HEAD]
 ~extern.h
 [DEPEND]
 ~$:INC_PDK\PFS173.INC
-~MotorController.PRE
+~Touchpad.PRE
 [PRE]
-~MotorController.PRJ
-~MotorController.PRE
+~Touchpad.PRJ
+~Touchpad.PRE

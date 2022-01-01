@@ -73,6 +73,11 @@ BTN				BIT PA.6;
 BTN_OutMode		BIT PAC.6;
 
 
+// Send out an interrupt to let the main processor know we are done
+
+INTC			Bit PA.7;
+INTC_OutMode	Bit PAC.7;
+
 // Let PA0 and PB0 be connected to the encoder, with PA0 & PB0
 // configured as the interrupt pins
 
@@ -142,9 +147,10 @@ void	FPPA0 (void)
 	set1 DIR_OutMode;
 	set1 PWM_OutMode;
 	set0 BTN_OutMode;		// Set BTN to input 
-		set0	SPI_ClkMode;	// input
+	set0	SPI_ClkMode;	// input
 	set0	SPI_InMode;		// input	
 	set1	SPI_OutMode;	// output
+	set1 INTC_OutMode;
 
 
 	while (1)
@@ -177,7 +183,9 @@ void	FPPA0 (void)
 		SPI_Handshake();
 		TM2C = 0b_0001_10_1_0;	// enable
 		counts = center;
+		INTC = 0;
 		goDesiredPos();
+		INTC = 1;
 		TM2C = 0b_0001_00_1_0; // disable
 
 	
@@ -272,7 +280,7 @@ void		goDesiredPos(void) {
 			}
 
 			TM2B = curr_PWM_val; // set PWM
-			.delay 1000*4; // artifical delay so that it doesn't go boom
+			.delay 1000*4; // artifical 1ms delay so that it doesn't go boom
 
 
 		} while (counts != pos);
