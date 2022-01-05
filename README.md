@@ -4,11 +4,16 @@ This repo contains code relating to the development of Padauk Microcontrollers.
 
 See the original blog post here: https://westsideelectronics.com/padauk-microcontrollers/
 
+See the encoder build here: https://westsideelectronics.com/using-the-3-cent-microcontroller/
+
+See the motor controller build here (featured on Hackaday!): https://westsideelectronics.com/repurposing-the-encoder-counter/
+
 # Repo contents
 
 1. Datasheets - datasheets for the Padauk devices (Emulator/Programmer/IC)
 2. Example - Snippets of code
 3. Encoder - This project converts the PFS173 into an encoder reader and exposes the count over a count/dir pin protocol and a SPI protocol.
+4. Motor Controller - This project converts the PFS173 into a motor controller with position control loop and the ability to control it over SPI
 
 # Building
 
