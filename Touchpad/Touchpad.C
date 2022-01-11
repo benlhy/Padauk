@@ -47,7 +47,7 @@ void	FPPA0 (void)
 
 	// Port B setup
 
-	PBDIER = 0b_0110_0001;  // Port B Digital Input Enable Register, 1/0:
+	PBDIER = 0b_0111_1111;  // Port B Digital Input Enable Register, 1/0:
 							// enable/disable
 
 	PBPH = 0b_0000_0001;	// Port B pull high register
@@ -62,6 +62,7 @@ void	FPPA0 (void)
 	set0	READ1_OutMode;	// set READ1 to input
 	set1	LED_OutMode;
 	PAC = 0xFF;				// set all A to outputs for debugging purposes
+	PA = 0;					// turn off all A
 
 
 	while (1)
@@ -82,13 +83,14 @@ void	FPPA0 (void)
 			} while (i--);
 			
 
-			if (end > 0x180) {
+			if (end > 0x1410) {
 				// touch detected
 				//set1 LED;
-				set1 PA.ww
+				set1 PA.ww;
+				.delay 1000*4*33 // wait 33 miliseconds for debounce 
 			} else {
 				//set0 LED;
-				set0 PA.ww
+				set0 PA.ww;
 			}
 			end = 0;
 		.ENDM

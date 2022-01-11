@@ -13,7 +13,8 @@ See the motor controller build here (featured on Hackaday!): https://westsideele
 1. Datasheets - datasheets for the Padauk devices (Emulator/Programmer/IC)
 2. Example - Snippets of code
 3. Encoder - This project converts the PFS173 into an encoder reader and exposes the count over a count/dir pin protocol and a SPI protocol.
-4. Motor Controller - This project converts the PFS173 into a motor controller with position control loop and the ability to control it over SPI
+4. Motor Controller - This project converts the PFS173 into a motor controller with position control loop and the ability to control it over SPI.
+5. TouchPad - This project converts the PFS173 into a touchpad and converts the readings into pinout values.
 
 # Building
 
