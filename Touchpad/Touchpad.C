@@ -40,7 +40,7 @@ void	FPPA0 (void)
 
 	// Port A setup
 
-	PADIER = 0b_0000_0000;  // Port A Digital Input Enable Register, 1/0:
+	PADIER = 0b_0111_0000;  // Port A Digital Input Enable Register, 1/0:
                        	    // enable/disable, Bit 2:1 is reserved
 
 	PAPH = 0b_0000_0000;	// Port A pull high register
@@ -61,8 +61,8 @@ void	FPPA0 (void)
 
 	set0	READ1_OutMode;	// set READ1 to input
 	set1	LED_OutMode;
-	PAC = 0xFF;				// set all A to outputs for debugging purposes
-	PA = 0;					// turn off all A
+	PAC = 0x0;				// set all A to outputs for debugging purposes
+	PA = 0xFF;			 	// turn on all A
 
 
 	while (1)
@@ -83,14 +83,16 @@ void	FPPA0 (void)
 			} while (i--);
 			
 
-			if (end > 0x1410) {
+			if (end > 0x80) {
 				// touch detected
 				//set1 LED;
-				set1 PA.ww;
+				set1 PAC.ww;	// set pin output
+				set0 PA.ww;		// pin low
 				.delay 1000*4*33 // wait 33 miliseconds for debounce 
 			} else {
 				//set0 LED;
-				set0 PA.ww;
+				set0 PAC.ww; 	// set pin input
+				//set1 PA.ww;
 			}
 			end = 0;
 		.ENDM
