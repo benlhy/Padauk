@@ -40,10 +40,7 @@ void	FPPA0 (void)
 	set1 LED;				// turn on LED
 
 	set0 BTN_OutMode;		// input
-	//PADIER = 0b_1111_1111;	// PADIER default is 1 for all, 1 and 2 are reserved
-
-
-	WORD count = 0;
+	PADIER = 0b_0000_0111;	// PADIER default is 1 for all, 1 and 2 are reserved, disable prevent leakage
 
 
 	while (1)

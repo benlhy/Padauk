@@ -41,15 +41,16 @@ void	FPPA0 (void)
 	set1 LED;				// turn on LED
 
 	set0 BTN_OutMode;		// input
-	PADIER = 0b_0000_0001;	// PADIER default is 1 for all, 1 and 2 are reserved, disable prevent leakage
+	PADIER = 0b_0000_0001;	// PADIER default is 1 for all, 1 and 2 are reserved, disable others to 
+							// prevent leakage
 
 
 	while (1)
 	{
 		// blink LED to indicate that it is live
-		.delay 1000*4*500; // delay is in SYSCLK counts 4000/4000,000 s = 1/1000 s = 1ms
+		.delay 1000*4*500; 		// delay is in SYSCLK counts 4000/4000,000 s = 1/1000 s = 1ms
 		set0 LED;
-		.delay 1000*4*500; // 500ms
+		.delay 1000*4*500; 		// 500ms
 		set1 LED;
 
 		if (btn_flag) {
@@ -72,10 +73,10 @@ void	Interrupt (void)
 	if (Intrq.PA0)
 	{	//	PA0 triggered
 
-		btn_flag = 1;
+		btn_flag = 1; // set flag
 		
 		
-		Intrq.PA0	=	0;
+		Intrq.PA0	=	0; //clear interrupt
 		//...
 	}
 
