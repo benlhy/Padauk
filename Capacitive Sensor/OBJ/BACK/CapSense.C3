@@ -131,21 +131,23 @@ void	FPPA0 (void)
 	
 
 			if (end > comparison) { // if the count is > baseline + margin -> we have a positive event
-				
-				set1 PAC.ww;	// set pin output
-				set1 PA.ww;		// pin high
-				.delay 1000*4*33 // wait 33 miliseconds for debounce 
+				set1 PAC.4; 		// turn on pin 4 for any event - we don't care
+				set1 PA.4;
+				//set1 PAC.ww;		// set pin output
+				//set1 PA.ww;		// pin high
+				.delay 1000*4*33 	// wait 33 miliseconds for debounce 
 			} else {
-				
-				set1 PAC.ww;	// set pin output
-				set0 PA.ww; 	// pin low
+				set1 PAC.4; 		// turn off pin 4 for any event
+				set0 PA.4;
+				//set1 PAC.ww;	// set pin output
+				//set0 PA.ww; 	// pin low
 				.delay 1000*4*33 // wait 33 miliseconds for debounce 
 				
 			}
 			end = 0; // reset value 
 		.ENDM
 		// sleep for x time
-		CLKMD = 0b1101_0110; // switch system clock to ILRC with divider
+		CLKMD = 0b1101_0110; 	// switch system clock to ILRC with divider
 		CLKMD.4 = 0; 			// disable IHRC
 		WORD count = 0 ;		// var to hold counter value
 		stt16 count;			// reset T16 timer to 0

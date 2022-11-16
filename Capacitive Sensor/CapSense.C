@@ -20,6 +20,8 @@
 
 	Note that PA.5 needs a pullup resistor.
 
+	1.1 Updated capsense with sleep between sensing events using stopexe
+
 	Not sure if sleep will affect timing of capsense
 
 
@@ -112,6 +114,7 @@ void	FPPA0 (void)
 
 		BYTE i = 10;
 		WORD comparison = 0;
+		WORD touch_flag = 0;
 		// for ww = 4,5,6
 		.FOR ww, <4,5,6>
 			i = 10; // decrement i
@@ -131,13 +134,14 @@ void	FPPA0 (void)
 	
 
 			if (end > comparison) { // if the count is > baseline + margin -> we have a positive event
-				set1 PAC.4; // turn on pin 4 for any event - we don't care
+				set1 PAC.4; 		// turn on pin 4 for any event - we don't care
 				set1 PA.4;
-				//set1 PAC.ww;	// set pin output
+				touch_flag = 1;
+				//set1 PAC.ww;		// set pin output
 				//set1 PA.ww;		// pin high
-				.delay 1000*4*33 // wait 33 miliseconds for debounce 
+				.delay 1000*4*33 	// wait 33 miliseconds for debounce 
 			} else {
-				set1 PAC.4; // turn off pin 4 for any event
+				set1 PAC.4; 		// turn off pin 4 for only if touch_flag not set event
 				set0 PA.4;
 				//set1 PAC.ww;	// set pin output
 				//set0 PA.ww; 	// pin low
@@ -146,14 +150,26 @@ void	FPPA0 (void)
 			}
 			end = 0; // reset value 
 		.ENDM
-		// sleep for x time
-		CLKMD = 0b1101_0110; // switch system clock to ILRC with divider
-		CLKMD.4 = 0; 			// disable IHRC
-		WORD count = 0 ;		// var to hold counter value
-		stt16 count;			// reset T16 timer to 0
-		stopexe;				// stop system clock
-		CLKMD.4 = 1;			// resume IHRC
-		CLKMD = 0b0001_0110;	// switch system clock to IHRC
+
+		if (touch_flag == 0) {
+			set1 PAC.4; 			// turn off pin 4 for only if touch_flag not set event
+			set0 PA.4;
+			//set1 PAC.ww;			// set pin output
+			//set0 PA.ww; 			// pin low
+			.delay 1000*4*33 		// wait 33 miliseconds for debounce 
+
+			// sleep only if there is no active event
+			CLKMD = 0b1101_0110; 	// switch system clock to ILRC with divider
+			CLKMD.4 = 0; 			// disable IHRC
+			WORD count = 0 ;		// var to hold counter value
+			stt16 count;			// reset T16 timer to 0
+			stopexe;				// stop system clock
+			CLKMD.4 = 1;			// resume IHRC
+			CLKMD = 0b0001_0110;	// switch system clock to IHRC
+
+		}
+		touch_flag = 0; 		// reset touch_flag
+
 
 
 
