@@ -15,6 +15,7 @@ See the motor controller build here (featured on Hackaday!): https://westsideele
 3. Encoder - This project converts the PFS173 into an encoder reader and exposes the count over a count/dir pin protocol and a SPI protocol.
 4. Motor Controller - This project converts the PFS173 into a motor controller with position control loop and the ability to control it over SPI.
 5. TouchPad - This project converts the PFS173 into a touchpad and converts the readings into pinout values.
+6. Sleepy - This project explores the use of `stopexe` as a way to sleep and save power
 
 # Building
 

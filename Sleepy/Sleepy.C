@@ -14,10 +14,8 @@
 #include	"extern.h"
 
 
-$ T16M 	ILRC, /8, BIT12;	// Use ILRC to count timer, set INTRQ.T16 = 1 every 2^13 times
-							// ILRC approx 95kHz therefore trigger every 0.68 seconds
 
-$ INTEN PA0;				// set PA0 as the button and trigger the Interrupt function
+$ INTEN PA0;				
 
 
 // setup LED
@@ -34,8 +32,16 @@ WORD btn_flag = 0;
 
 void	FPPA0 (void)
 {
+	
 	.ADJUST_IC	SYSCLK=IHRC/4		//	SYSCLK=IHRC/4, IHRC is 16Mhz - SYSCLK is 4Mhz
-
+	
+	$ T16M 	ILRC, /64, BIT15;	// Use ILRC to count timer, set INTRQ.T16 = 1 every 2^13 times
+								// ILRC approx 95kHz therefore trigger every 0.68 seconds
+	$ INTEN PA0,T16; 		// set PA0 as the button and trigger the Interrupt function
+	$ INTEGS BIT_R, PA0_F; // edge select
+	INTRQ = 0; // clear intrq
+	ENGINT; // enable global interrupt s
+	
 	//	Insert Initial Code
 	set1 LED_OutMode; 		// output
 	set1 LED;				// turn on LED
@@ -55,10 +61,24 @@ void	FPPA0 (void)
 
 		if (btn_flag) {
 			// if button is pressed, sleep for approx 0.6 seconds before resume execution
+			set0 LED;
+			.delay 1000*4;
+
+			// how to save more power?
+			// switch system clock to ILRC
+			// 0110
+			CLKMD = 0b11010110; // switch system clock to ILRC
+			
+			CLKMD.4 = 0; 	// disable IHRC 
+
 			WORD count=0;		// var to hold counter
 			stt16 count; 		// reset counter to 0
 			stopexe; 			// stop execution
+			CLKMD.4 = 1;		// enable IHRC
+			CLKMD = 0b00010110;	// switch system clock to IHRC 
+
 			btn_flag = 0;		// reset flag to 0
+
 		}
 
 
@@ -78,6 +98,9 @@ void	Interrupt (void)
 		
 		Intrq.PA0	=	0; //clear interrupt
 		//...
+	}
+	if (Intrq.T16) {
+		Intrq.T16 = 0;
 	}
 
 	popaf;
