@@ -131,16 +131,14 @@ void	FPPA0 (void)
 	
 
 			if (end > comparison) { // if the count is > baseline + margin -> we have a positive event
-				set1 PAC.4; // turn on pin 4 for any event - we don't care
-				set1 PA.4;
-				//set1 PAC.ww;	// set pin output
-				//set1 PA.ww;		// pin high
+				
+				set1 PAC.ww;	// set pin output
+				set1 PA.ww;		// pin high
 				.delay 1000*4*33 // wait 33 miliseconds for debounce 
 			} else {
-				set1 PAC.4; // turn off pin 4 for any event
-				set0 PA.4;
-				//set1 PAC.ww;	// set pin output
-				//set0 PA.ww; 	// pin low
+				
+				set1 PAC.ww;	// set pin output
+				set0 PA.ww; 	// pin low
 				.delay 1000*4*33 // wait 33 miliseconds for debounce 
 				
 			}

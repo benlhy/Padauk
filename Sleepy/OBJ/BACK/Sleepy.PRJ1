@@ -1,0 +1,11 @@
+[INI]
+PROJECT=PRE_FILE
+[LINKS]
+~Sleepy.C
+[HEAD]
+~extern.h
+[DEPEND]
+~Sleepy.PRE
+[PRE]
+~Sleepy.PRJ
+~Sleepy.PRE
