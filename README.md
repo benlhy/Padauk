@@ -16,6 +16,7 @@ See the motor controller build here (featured on Hackaday!): https://westsideele
 4. Motor Controller - This project converts the PFS173 into a motor controller with position control loop and the ability to control it over SPI.
 5. TouchPad - This project converts the PFS173 into a touchpad and converts the readings into pinout values.
 6. Sleepy - This project explores the use of `stopexe` as a way to sleep and save power
+7. Capacitive Sensor - This project demonstrates capacitive sensing with sleep by combining the Touchpad and Sleepy projects
 
 # Building
 
@@ -24,6 +25,7 @@ You will need the programmer to be connected.
 1. Download & install the latest version of the Padauk IDE here: http://www.padauk.com.tw/en/technical/index.aspx?kind=26
 2. Open the project in the IDE and hit: `Execute > Build`
 3. Once the compiler completes, open the interface to the programmer `Execute > Writer`
+   1. Do note that you need to build the latest version of the code when writing to the IC
 
 ![Padauk Programmer screen](/Images/writer_page.jpg)
 

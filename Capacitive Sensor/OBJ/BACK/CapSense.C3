@@ -45,12 +45,12 @@ void	FPPA0 (void)
 {
 	.ADJUST_IC	SYSCLK=IHRC/4		//	SYSCLK=IHRC/4
 
-	$ T16M 	ILRC, /4, BIT12;	// Use ILRC/64 to count timer, set INTRQ.T16 = 1 every 2^15 times
+	$ T16M 	ILRC, /64, BIT12;	// Use ILRC/64 to count timer, set INTRQ.T16 = 1 every 2^15 times
 								// ILRC approx 95kHz therefore trigger every 21 seconds
-	$ INTEN T16; 		// set T16 as  the for the Interrupt function
-	$ INTEGS BIT_R; // edge select
-	INTRQ = 0; // clear intrq
-	ENGINT; // enable global interrupts
+	$ INTEN T16; 			// set T16 as  the for the Interrupt function
+	$ INTEGS BIT_R; 		// edge select
+	INTRQ = 0; 				// clear intrq
+	ENGINT; 				// enable global interrupts
 
 	// Port A setup
 
@@ -82,7 +82,11 @@ void	FPPA0 (void)
 	WORD baseline_4 = 0;
 	WORD baseline_5 = 0;
 	WORD baseline_6 = 0;
-	WORD margin = 0x30; // margin of difference = 16 counts
+
+	
+
+
+	WORD margin = 0x10; // margin of difference = 16 counts
 
 	// baseline calibration for dry/untouched status
 	BYTE j = 0;
@@ -132,24 +136,10 @@ void	FPPA0 (void)
 
 			comparison = baseline_#ww + margin; // set the area to compare with
 
-	
-
 			if (end > comparison) { // if the count is > baseline + margin -> we have a positive event
-				//set1 PAC.4; 		// turn on pin 4 for any event - we don't care
-				//set1 PA.4;
 				touch_flag = 1;
-				//set1 PAC.ww;		// set pin output
-				//set1 PA.ww;		// pin high
-				//.delay 1000*4*33 	// wait 33 miliseconds for debounce 
 			} 
-			//else {
-				//set1 PAC.4; 		// turn off pin 4 for only if touch_flag not set event
-				//set0 PA.4;
-				//set1 PAC.ww;	// set pin output
-				//set0 PA.ww; 	// pin low
-				//.delay 1000*4*33 // wait 33 miliseconds for debounce 
-				
-			//}
+			
 			end = 0; // reset value 
 		.ENDM
 
@@ -158,19 +148,21 @@ void	FPPA0 (void)
 			set0 PA.4;
 			//set1 PAC.ww;			// set pin output
 			//set0 PA.ww; 			// pin low
-			.delay 1000*4*33; 		// wait 33 miliseconds for debounce 
+			//.delay 1000*4*33; 		// wait 33 miliseconds for debounce 
 
 			// sleep only if there is no active event
 			//CLKMD = 0b1101_0110; 	// switch system clock to ILRC with divider
 			//CLKMD.4 = 0; 			// disable IHRC
 			WORD count = 0 ;		// var to hold counter value
 			stt16 count;			// reset T16 timer to 0
+			CLKMD = 0xF4;
+			CLKMD.4 = 0;
 			stopexe;				// stop system clock
-			//CLKMD = 0b1101_0110;	// resume IHRC
-			.delay 1000*4;			// wait
-			//CLKMD = 0b0001_0110;	// switch system clock to IHRC
+			CLKMD.4 = 1;			// enable IHRC
+			CLKMD = 0x14;			// IHRC/4
+
 			.delay 1000*4*33; 		// wait 33 miliseconds for debounce
-			// e
+			
 
 		} else {
 			set1 PAC.4;
@@ -192,7 +184,7 @@ void	Interrupt (void)
 
 	if (Intrq.T16)
 	{	//	T16 Trig
-		set0 PA.4;
+		//	set0 PA.4;
 		
 		Intrq.T16	=	0;
 		//...
