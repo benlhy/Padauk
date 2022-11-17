@@ -22,7 +22,6 @@ PROJECT=PRE_FILE
 [HEAD]
 ~extern.h
 [DEPEND]
-~$:INC_PDK\PFS173.INC
 ~CapSense.PRE
 [PRE]
 ~CapSense.PRJ
